@@ -1,0 +1,8 @@
+pl
+
+A basic video player.
+
+Goals:
+ - Audio and video decoding through libav
+ - No tearing, buffering, or other annoying behaviour
+
