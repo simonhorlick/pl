@@ -17,6 +17,7 @@ public:
     void DoInitialise(const char* filename) {
         ASSERT_TRUE(source_ == 0);
         source_ = new FileSource(filename);
+        ASSERT_TRUE(source_->Initialise());
         ASSERT_TRUE(demuxer_->Initialise(source_));
     }
 
