@@ -5,7 +5,7 @@ FileSource::FileSource(const char* filename) {
 }
 
 bool FileSource::Initialise() {
-    file_.open(filename_);
+    file_.open(filename_, std::ios::binary);
     return file_.is_open();
 }
 
