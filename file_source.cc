@@ -1,6 +1,10 @@
 #include "file_source.h"
 
-bool FileSource::Initialise(const char* filename) {
+FileSource::FileSource(const char* filename) {
+    filename_ = filename;
+}
+
+bool FileSource::Initialise() {
     return false;
 }
 

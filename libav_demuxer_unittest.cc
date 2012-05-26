@@ -1,4 +1,6 @@
 #include <gtest/gtest.h>
+#include "libav_demuxer.h"
+#include "file_source.h"
 
 class LibavDemuxerTest : public testing::Test {
 public:
@@ -15,8 +17,7 @@ public:
     void DoInitialise(const char* filename) {
         ASSERT_TRUE(source_ == 0);
         source_ = new FileSource(filename);
-        bool init = demuxer_->Initialise(source_);
-        ASSERT_TRUE(init);
+        ASSERT_TRUE(demuxer_->Initialise(source_));
     }
 
     LibavDemuxer* demuxer_;

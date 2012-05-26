@@ -3,9 +3,12 @@
 
 class FileSource : public DataSource {
 public:
-   bool Initialise(const char* filename);
+   FileSource(const char* filename);
+
+   bool Initialise();
 
 private:
+   const char* filename_;
    std::ifstream file_; 
 };
 
