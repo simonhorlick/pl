@@ -1,5 +1,5 @@
 #include "libav_demuxer.h"
-#include "stream.h"
+#include "libav_stream.h"
 
 #include <iostream>
 
@@ -66,9 +66,9 @@ bool LibavDemuxer::Initialise(DataSource* source) {
     return true;
 }
 
-std::vector<Stream*> LibavDemuxer::FindStreams()
+std::vector<LibavStream*> LibavDemuxer::FindStreams()
 {
-    std::vector<Stream*> streams;
+    std::vector<LibavStream*> streams;
 
     //std::clog << "demuxer: find stream info\n";
     if(avformat_find_stream_info(format_context_, 0) < 0)
@@ -87,7 +87,7 @@ std::vector<Stream*> LibavDemuxer::FindStreams()
         if(codec_context->codec_type == AVMEDIA_TYPE_VIDEO ||
             codec_context->codec_type == AVMEDIA_TYPE_AUDIO)
         {
-            streams[i] = new Stream(this, format_context_->streams[i]);
+            streams[i] = new LibavStream(this, format_context_->streams[i]);
         }
     }
     return streams;

@@ -10,11 +10,11 @@ extern "C"
     #include <libavformat/avformat.h>
 }
 
-class Stream;
+class LibavStream;
 
-// A Stream will call PostDemuxTask on the Demuxer whenever it requires more
+// A LibavStream will call PostDemuxTask on the Demuxer whenever it requires more
 // data. The Demuxer will then read packets and pass these to the correct
-// streams until every Stream no longer requires data.
+// streams until every LibavStream no longer requires data.
 
 class LibavDemuxer {
 public:
@@ -32,18 +32,18 @@ public:
     // The actual method that handles demuxing.
     void Demux();
 
-    std::vector<Stream*>& GetStreams() {
+    std::vector<LibavStream*>& GetStreams() {
         return streams_;
     }
 
 private:
-    std::vector<Stream*> FindStreams();
+    std::vector<LibavStream*> FindStreams();
 
     DataSource* source_;
     AVFormatContext* format_context_;
     AVIOContext* io_context_;
     unsigned char* io_buffer_;
-    std::vector<Stream*> streams_;
+    std::vector<LibavStream*> streams_;
 };
 
 #endif // LIBAV_DEMUXER_H
