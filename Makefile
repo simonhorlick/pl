@@ -14,13 +14,13 @@ libav_demuxer.o: libav_demuxer.cc libav_demuxer.h data_source.h stream.h
 libav_demuxer_unittest.o: libav_demuxer_unittest.cc libav_demuxer.h
 	$(CXX) $(CXXFLAGS) -I$(GTEST_DIR)/include -c $< -o $@
 
-libav_demuxer_unittest: libav_demuxer_unittest.o file_source.o libav_demuxer.o gtest_main.a
+libav_demuxer_unittest: libav_demuxer_unittest.o stream.o file_source.o libav_demuxer.o gtest_main.a
 	$(CXX) $(CXXFLAGS) $^ -lavformat -lpthread -o $@
 
 file_source.o: file_source.cc file_source.h data_source.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-stream.o: stream.cc
+stream.o: stream.cc stream.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 

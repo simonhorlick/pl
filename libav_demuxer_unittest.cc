@@ -27,7 +27,7 @@ public:
 
 TEST_F(LibavDemuxerTest, InitialiseNoStreams) {
     DoInitialise("test/nostreams.ts");
-    std::map<int, Stream*>& streams = demuxer_->GetStreams();
+    std::vector<Stream*>& streams = demuxer_->GetStreams();
     EXPECT_TRUE(streams.empty());
 }
 
