@@ -52,7 +52,27 @@ TEST_F(LibavDemuxerTest, ReadAudioPacketsFromMultipleStreams) {
 }
 
 TEST_F(LibavDemuxerTest, ReadVideoPacket) {
-    FAIL();
+    DoInitialise("test/normal.ts");
+
+    std::vector<LibavStream*>& streams = demuxer_->GetStreams();
+    EXPECT_FALSE(streams.empty());
+
+    // Find first video stream
+    LibavStream* video_stream = 0;
+    typedef std::vector<LibavStream*>::iterator stream_iterator;
+    for(stream_iterator it = streams.begin(); it != streams.end(); ++it) {
+        if((*it)->IsVideoStream()) {
+            video_stream = *it;
+            break;
+        }
+    }
+    ASSERT_TRUE(video_stream);
+
+    ReadBufferCallback cb = MockReadFrameCB();
+    video_stream->ReadFrame(cb);
+
+    // Check that the callback is called correctly
+    // Check that the buffer corresponds to the chosen video stream
 }
 
 TEST_F(LibavDemuxerTest, ReadEndOfStream) {
