@@ -6,15 +6,15 @@ GTEST_DIR = /usr/include/gtest-1.6.0
 all:
 
 clean:
-	rm -f *.o *.a
+	rm -f *.o *.a libav_demuxer_unittest
 
 libav_demuxer.o: libav_demuxer.cc libav_demuxer.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-libav_demuxer_test.o: libav_demuxer_test.cc libav_demuxer.h
+libav_demuxer_unittest.o: libav_demuxer_unittest.cc libav_demuxer.h
 	$(CXX) $(CXXFLAGS) -I$(GTEST_DIR)/include -c $< -o $@
 
-libav_demuxer_test: libav_demuxer_test.o libav_demuxer.o gtest_main.a
+libav_demuxer_unittest: libav_demuxer_unittest.o libav_demuxer.o gtest_main.a
 	$(CXX) $(CXXFLAGS) $^ -lavformat -lpthread -o $@
 
 
