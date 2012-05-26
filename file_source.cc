@@ -5,6 +5,12 @@ FileSource::FileSource(const char* filename) {
 }
 
 bool FileSource::Initialise() {
-    return false;
+    file_.open(filename_);
+    return file_.is_open();
+}
+
+int FileSource::Read(uint8_t* buffer, int size) {
+    file_.read(reinterpret_cast<char*>(buffer), size);
+    return file_.gcount();
 }
 
