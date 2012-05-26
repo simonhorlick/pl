@@ -1,5 +1,5 @@
 CXX = clang++
-CXXFLAGS += -g -Wall
+CXXFLAGS += -g -Wall -D__STDC_CONSTANT_MACROS
 
 GTEST_DIR = /usr/include/gtest-1.6.0
 
