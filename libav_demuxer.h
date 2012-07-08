@@ -2,7 +2,7 @@
 #define LIBAV_DEMUXER_H
 
 #include <vector>
-#include <cstdint>
+#include <stdint.h>
 #include "data_source.h"
 
 extern "C"

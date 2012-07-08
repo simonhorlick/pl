@@ -1,7 +1,7 @@
 #ifndef DATA_SOURCE_H
 #define DATA_SOURCE_H
 
-#include <cstdint>
+#include <stdint.h>
 
 class DataSource {
 public:
