@@ -40,6 +40,13 @@ bool LinuxDVBSource::Tune(int frequencykHz) {
 }
 
 int LinuxDVBSource::Read(uint8_t* buffer, int size) {
-    return -1;
+    int bytes = read(dvr_handle, buffer, size);
+    if(bytes < 0) {
+        printf("Error reading from dvr device\n");
+        if(errno == EOVERFLOW) return 0;
+        return -1;
+    }
+
+    return bytes;
 }
 
