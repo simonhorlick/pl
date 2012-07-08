@@ -6,3 +6,13 @@ Goals:
  - Audio and video decoding through libav
  - No tearing, buffering, or other annoying behaviour
 
+Architecture:
+ - Frames will be processed through the chain as and when the renderer requests
+   them. i.e. it will be pull-based.
+ - Source -> Demuxer -> Stream -> Decoder -> Filter -> Renderer
+                     -> Stream -> Decoder -> Renderer
+                        ...
+                     -> Stream -> Decoder -> Renderer
+ - The Demuxer will read the Source and place packets into the Streams until
+   there are no Streams that require further data.
+
