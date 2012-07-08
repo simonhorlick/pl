@@ -5,14 +5,18 @@
 
 class LibavDemuxer;
 struct AVStream;
-
-typedef boost::function<void (uint8_t*,int)> ReadBufferCallback;
+struct AVCodecContext;
 
 class LibavStream {
 public:
     LibavStream(LibavDemuxer* demuxer, AVStream* stream);
 
-    void ReadFrame(ReadBufferCallback& callback);
+    AVCodecContext* GetAVContext();
+
+    AVPacket* ReadFrame();
+private:
+    AVStream* stream_;
+    LibavDemuxer* demuxer_;
 };
 
 #endif // LIBAV_STREAM_H

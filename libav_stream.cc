@@ -6,6 +6,11 @@ extern "C" {
 }
 
 LibavStream::LibavStream(LibavDemuxer* demuxer, AVStream* stream) {
+    stream_ = stream;
+    demuxer_ = demuxer;
+}
 
+AVCodecContext* LibavStream::GetAVContext() {
+    return stream_->codec;
 }
 
