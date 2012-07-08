@@ -1,5 +1,5 @@
 CXX = clang++
-CXXFLAGS += -std=c++11 -g -Wall -D__STDC_CONSTANT_MACROS
+CXXFLAGS += -g -Wall -D__STDC_CONSTANT_MACROS
 
 GTEST_DIR = /usr/include/gtest-1.6.0
 
@@ -23,6 +23,14 @@ file_source.o: file_source.cc file_source.h data_source.h
 libav_stream.o: libav_stream.cc libav_stream.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+libav_video_decoder.o: libav_video_decoder.cc libav_video_decoder.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+main.o: main.cc libav_video_decoder.h libav_demuxer.h data_source.h libav_stream.h file_source.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+pl: main.o libav_video_decoder.o libav_stream.o file_source.o libav_demuxer.o
+	$(CXX) $(CXXFLAGS) $^ -lavformat -lpthread -o $@
 
 # Google Test rules
 
