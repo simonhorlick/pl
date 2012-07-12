@@ -17,6 +17,9 @@ libav_demuxer_unittest.o: libav_demuxer_unittest.cc libav_demuxer.h
 libav_demuxer_unittest: libav_demuxer_unittest.o libav_stream.o file_source.o libav_demuxer.o gtest_main.a
 	$(CXX) $(CXXFLAGS) $^ -lavformat -lpthread -o $@
 
+libdvbpsi_demuxer.o: libdvbpsi_demuxer.cc libdvbpsi_demuxer.h data_source.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 file_source.o: file_source.cc file_source.h data_source.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 

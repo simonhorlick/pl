@@ -2,7 +2,7 @@
 #include "data_source.h"
 
 bool LibdvbpsiDemuxer::Initialise(DataSource* source) {
-
+    return true;
 }
 
 void LibdvbpsiDemuxer::PostDemuxTask() {
