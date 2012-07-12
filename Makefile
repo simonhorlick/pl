@@ -29,11 +29,11 @@ libav_stream.o: libav_stream.cc libav_stream.h
 libav_video_decoder.o: libav_video_decoder.cc libav_video_decoder.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-main.o: main.cc libav_video_decoder.h libav_demuxer.h data_source.h libav_stream.h file_source.h
+main.o: main.cc file_source.h libdvbpsi_demuxer.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-pl: main.o libav_video_decoder.o libav_stream.o file_source.o libav_demuxer.o
-	$(CXX) $(CXXFLAGS) $^ -lavformat -lpthread -o $@
+pl: main.o file_source.o libdvbpsi_demuxer.o
+	$(CXX) $(CXXFLAGS) $^ -ldvbpsi -lavformat -lpthread -o $@
 
 # Google Test rules
 
