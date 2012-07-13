@@ -103,14 +103,14 @@ static void PATCallback(void* opaque, dvbpsi_pat_t* table) {
 bool LibdvbpsiDemuxer::Initialise(DataSource* source) {
     source_ = source;
 
-    context_ = dvbpsi_NewHandle(&debug_print, DVBPSI_MSG_DEBUG);
-    if(!context_) {
+    pat_handle_ = dvbpsi_NewHandle(&debug_print, DVBPSI_MSG_DEBUG);
+    if(!pat_handle_) {
         std::cerr << "Failed to initialise libdvbpsi\n";
         return false;
     }
 
     // A PAT contains n PMT references. 
-    if(!dvbpsi_AttachPAT(context_, PATCallback, NULL)) {
+    if(!dvbpsi_AttachPAT(pat_handle_, PATCallback, NULL)) {
         std::cerr << "Failed to start PAT callback\n";
         return false;
     }
@@ -119,9 +119,9 @@ bool LibdvbpsiDemuxer::Initialise(DataSource* source) {
 }
 
 void LibdvbpsiDemuxer::Cleanup() {
-    if(context_) {
-        dvbpsi_DetachPAT(context_);
-        dvbpsi_DeleteHandle(context_);
+    if(pat_handle_) {
+        dvbpsi_DetachPAT(pat_handle_);
+        dvbpsi_DeleteHandle(pat_handle_);
     }
 }
 
@@ -154,7 +154,7 @@ void LibdvbpsiDemuxer::Demux() {
         uint16_t pid = ((uint16_t)(buffer[1] & 0x1f) << 8) + buffer[2];
         if(pid == 0x0) {
             std::clog << "Got PAT packet (pid 0)\n";
-            dvbpsi_PushPacket(context_, buffer);
+            dvbpsi_PushPacket(pat_handle_, buffer);
         } else if(pmt_.find(pid) != pmt_.end()) {
             std::clog << "Got PMT packet (pid "<<pid<<")\n";
             dvbpsi_PushPacket(pmt_[pid], buffer);
