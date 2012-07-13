@@ -10,7 +10,7 @@ typedef struct dvbpsi_s dvbpsi_t;
 class LibdvbpsiDemuxer {
 public:
 
-    LibdvbpsiDemuxer() : source_(0), context_(0) {}
+    LibdvbpsiDemuxer() : source_(0), pat_handle_(0) {}
 
     bool Initialise(DataSource* source);
 
@@ -31,7 +31,7 @@ private:
     bool ReadPacket(uint8_t* buffer);
 
     DataSource* source_;
-    dvbpsi_t* context_;
+    dvbpsi_t* pat_handle_;
     std::map<uint16_t, dvbpsi_t*> pmt_;
 };
 
