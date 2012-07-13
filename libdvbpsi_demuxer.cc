@@ -47,7 +47,8 @@ static const char* GetStreamTypeString(uint8_t type) {
     }
 }
 
-static void PMTCallback(void* zero, dvbpsi_pmt_t* table) {
+static void PMTCallback(void* opaque, dvbpsi_pmt_t* table) {
+    LibdvbpsiDemuxer* demuxer = reinterpret_cast<LibdvbpsiDemuxer*>(opaque);
     std::cout << "PMT\n";
     std::cout << "  program number is " << table->i_program_number << '\n';
     std::cout << "  version number is " << table->i_version << '\n';
@@ -89,7 +90,7 @@ static void PATCallback(void* opaque, dvbpsi_pat_t* table) {
 
         std::clog << "Attaching new PMT listener";
         pmt_[program->i_pid] = dvbpsi_NewHandle(&debug_print, DVBPSI_MSG_DEBUG);
-        if(dvbpsi_AttachPMT(pmt_[program->i_pid], program->i_number, PMTCallback, 0)) {
+        if(dvbpsi_AttachPMT(pmt_[program->i_pid], program->i_number, PMTCallback, this)) {
             std::cerr << "Failed to start PMT callback\n";
             return false;
         }
@@ -110,7 +111,7 @@ bool LibdvbpsiDemuxer::Initialise(DataSource* source) {
     }
 
     // A PAT contains n PMT references. 
-    if(!dvbpsi_AttachPAT(pat_handle_, PATCallback, NULL)) {
+    if(!dvbpsi_AttachPAT(pat_handle_, PATCallback, this)) {
         std::cerr << "Failed to start PAT callback\n";
         return false;
     }
