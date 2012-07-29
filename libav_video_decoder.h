@@ -13,7 +13,7 @@ class LibavVideoDecoder {
 public:
     LibavVideoDecoder() : es_(0), codec_(0), codec_context_(0) {}
 
-    bool Initialise(AVCodecContext* context, ElementaryStream* es);
+    bool Initialise(ElementaryStream* es);
 
     void ReadFrame(ReadPictureCallback& callback);
 

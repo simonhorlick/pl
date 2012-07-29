@@ -6,17 +6,20 @@ extern "C"
     #include <libavcodec/avcodec.h>
 }
 
-bool LibavVideoDecoder::Initialise(AVCodecContext* context, ElementaryStream* es) {
-    context_ = context;
-
+bool LibavVideoDecoder::Initialise(ElementaryStream* es) {
     // TODO: Make this configurable
     codec_ = avcodec_find_decoder(CODEC_ID_H264);
-
     if(!codec_) {
         std::cerr << "libav error: avcodec_find_decoder\n";
         return false;
     }
     
+    context_ = avcodec_alloc_context3(codec_);
+    if(!context_) {
+        std::cerr << "libav error: could not allocate libav context\n";
+        return false;
+    }
+
     if(avcodec_open2(context_, codec_, NULL) < 0) {
         std::cerr << "libav error: avcodec_open\n";
         return false;
