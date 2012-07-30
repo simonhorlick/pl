@@ -29,8 +29,11 @@ libav_stream.o: libav_stream.cc libav_stream.h
 libav_video_decoder.o: libav_video_decoder.cc libav_video_decoder.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-main.o: main.cc libav_video_decoder.h libav_demuxer.h data_source.h libav_stream.h file_source.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+libav_video_decoder_unittest.o: libav_video_decoder_unittest.cc libav_video_decoder.h elementary_stream.h
+	$(CXX) $(CXXFLAGS) -I$(GTEST_DIR)/include -c $< -o $@
+
+libav_video_decoder_unittest: libav_video_decoder_unittest.o libav_video_decoder.o gtest_main.a
+	$(CXX) $(CXXFLAGS) $^ -lz -lavutil -lavcodec -lpthread -o $@
 
 pl: main.o libav_video_decoder.o libav_stream.o file_source.o libav_demuxer.o
 	$(CXX) $(CXXFLAGS) $^ -lavformat -lpthread -o $@
