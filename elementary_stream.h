@@ -27,6 +27,7 @@ public:
     int Read(uint8_t* buf, int size) {
         int read = std::min((int)buf_.size(), size);
         std::copy(buf_.begin(), buf_.begin() + read, buf);
+        buf_.erase(buf_.begin(), buf_.begin() + read);
         return read;
     }
 
