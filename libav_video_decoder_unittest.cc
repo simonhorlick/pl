@@ -31,8 +31,23 @@ public:
     }
 };
 
+void WritePGM(const char *buf, int pitch, int width, int height,
+        const std::string& filename) {
+    std::ofstream f(filename.c_str(), std::ios::binary);
+    f << "P5\n"
+      << width << " " << height << "\n"
+      << 255 << "\n";
+    for(int i=0; i<height; i++)
+        f.write(buf + i*pitch, width);
+    f.close();
+}
+
 void FrameDecodeCallback(AVFrame* f) {
     std::clog << "Got " << av_get_picture_type_char(f->pict_type) << " frame\n";
+    std::ostringstream oss;
+    oss << "frame" << std::setw(6) << (int)f->coded_picture_number << ".pgm";
+    WritePGM(reinterpret_cast<const char*>(f->data[0]),
+        f->linesize[0], 1920, 1080, oss.str());
 }
 
 TEST_F(LibavDecoderTest, Decode) {
