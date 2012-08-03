@@ -7,6 +7,8 @@ extern "C"
 }
 
 bool LibavVideoDecoder::Initialise(ElementaryStream* es) {
+    avcodec_register_all();
+
     // TODO: Make this configurable
     codec_ = avcodec_find_decoder(CODEC_ID_H264);
     if(!codec_) {
@@ -24,6 +26,8 @@ bool LibavVideoDecoder::Initialise(ElementaryStream* es) {
         std::cerr << "libav error: avcodec_open\n";
         return false;
     }
+
+    es_ = es;
 
     return true;
 }
