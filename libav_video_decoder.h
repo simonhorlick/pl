@@ -5,13 +5,14 @@
 
 class ElementaryStream;
 struct AVFrame;
+struct AVCodec;
 struct AVCodecContext;
 
 typedef boost::function<void(AVFrame*)> ReadPictureCallback;
 
 class LibavVideoDecoder {
 public:
-    LibavVideoDecoder() : es_(0), codec_(0), codec_context_(0) {}
+    LibavVideoDecoder() : es_(0), context_(0), codec_(0) {}
 
     bool Initialise(ElementaryStream* es);
 
