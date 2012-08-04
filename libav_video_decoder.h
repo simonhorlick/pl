@@ -2,6 +2,7 @@
 #define LIBAV_VIDEO_DECODER_H
 
 #include <boost/function.hpp>
+#include "libav_demuxer.h"
 
 class ElementaryStream;
 struct AVFrame;
@@ -12,14 +13,14 @@ typedef boost::function<void(AVFrame*)> ReadPictureCallback;
 
 class LibavVideoDecoder {
 public:
-    LibavVideoDecoder() : es_(0), context_(0), codec_(0) {}
+    LibavVideoDecoder() : demuxer_(0), context_(0), codec_(0) {}
 
-    bool Initialise(ElementaryStream* es);
+    bool Initialise(LibavDemuxer* demuxer);
 
-    void ReadFrame(ReadPictureCallback& callback);
+    bool ReadFrame(ReadPictureCallback& callback);
 
 private:
-    ElementaryStream* es_;
+    LibavDemuxer* demuxer_;
     AVCodecContext* context_;
     AVCodec* codec_;
 };

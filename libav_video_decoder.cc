@@ -6,7 +6,7 @@ extern "C"
     #include <libavcodec/avcodec.h>
 }
 
-bool LibavVideoDecoder::Initialise(ElementaryStream* es) {
+bool LibavVideoDecoder::Initialise(LibavDemuxer* demuxer) {
     avcodec_register_all();
 
     // TODO: Make this configurable
@@ -27,13 +27,12 @@ bool LibavVideoDecoder::Initialise(ElementaryStream* es) {
         return false;
     }
 
-    es_ = es;
+    demuxer_ = demuxer;
 
     return true;
 }
 
-void LibavVideoDecoder::ReadFrame(ReadPictureCallback& callback)
-{
+bool LibavVideoDecoder::ReadFrame(ReadPictureCallback& callback) {
     // FIXME: This should run on a seperate thread.
     // TODO: Get the packets from the elementary stream
     AVPacket* pkt = 0;

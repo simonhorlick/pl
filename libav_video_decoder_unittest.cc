@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include "libav_video_decoder.h"
 #include "elementary_stream.h"
+#include "libav_demuxer.h"
 
 extern "C" {
     #include <libavcodec/avcodec.h>
@@ -52,13 +53,18 @@ void FrameDecodeCallback(AVFrame* f) {
 
 TEST_F(LibavDecoderTest, Decode) {
     std::cout << "Initialising video decoder\n";
-    LibavVideoDecoder d;
-    d.Initialise(CreateVideoStream("test/stream.264"));
+
+    // Get frame from stream
+    LibavDemuxer demuxer;
+    demuxer.Initialise(CreateVideoStream("test/stream.264"));
+
+    LibavVideoDecoder decoder;
+    decoder.Initialise(&demuxer);
 
     ReadPictureCallback cb = &FrameDecodeCallback;
     std::cout << "Calling GetFrame\n";
     for(int i=0; i<5; i++)
-        d.ReadFrame(cb);
+        decoder.ReadFrame(cb);
     std::cout << "Done\n";
 }
 
