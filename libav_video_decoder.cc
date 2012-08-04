@@ -34,26 +34,29 @@ bool LibavVideoDecoder::Initialise(LibavDemuxer* demuxer) {
 
 bool LibavVideoDecoder::ReadFrame(ReadPictureCallback& callback) {
     // FIXME: This should run on a seperate thread.
-    // TODO: Get the packets from the elementary stream
-    AVPacket* pkt = 0;
-
-    AVFrame* picture = avcodec_alloc_frame();
-    int got_picture;
-    int len = avcodec_decode_video2(context_, picture, &got_picture, pkt);
-    if(len < 0) {
-        std::cerr << "Error while decoding frame\n";
-        // So get another packet from the demuxer and try again.
-        // This sounds kinda crappy though.
-        return;
+    AVPacket pkt;
+    if(!demuxer_->ReadFrame(pkt)) {
+        return false;
     }
 
-    if(got_picture) callback(picture);
+    while(pkt.size) {
+        AVFrame* picture = avcodec_alloc_frame();
+        int got_picture;
+        int len = avcodec_decode_video2(context_, picture, &got_picture, &pkt);
+        if(len < 0) {
+            std::cerr << "Error while decoding frame\n";
+            return false;
+        }
 
-    pkt->size -= len;
-    pkt->data += len;
-    //av_free_packet(&pkt);
+        if(got_picture) {
+            callback(picture);
+        }
 
-    std::cerr << "Still " << pkt->size << " bytes of data left in packet after decode\n";
+        pkt.size -= len;
+        pkt.data += len;
+        //av_free_packet(&pkt);
+    }
+    return true;
 }
 
 
