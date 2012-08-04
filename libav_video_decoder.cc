@@ -33,7 +33,7 @@ void LibavVideoDecoder::ReadFrame(ReadPictureCallback& callback)
 
     AVFrame* picture = avcodec_alloc_frame();
     int got_picture;
-    int len = avcodec_decode_video2(codec_ctx, picture, &got_picture, pkt);
+    int len = avcodec_decode_video2(context_, picture, &got_picture, pkt);
     if(len < 0) {
         std::cerr << "Error while decoding frame\n";
         // So get another packet from the demuxer and try again.
