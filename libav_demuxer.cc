@@ -55,16 +55,16 @@ bool LibavDemuxer::Initialise(ElementaryStream* stream) {
     return true;
 }
 
-void LibavDemuxer::ReadFrame(AVPacket** packet) {
-    if(av_read_frame(format_context_, *packet) < 0) {
+void LibavDemuxer::ReadFrame(AVPacket& packet) {
+    if(av_read_frame(format_context_, &packet) < 0) {
         std::clog << "av_read_frame failed\n";
-        (*packet)->data = 0;
-        (*packet)->size = 0;
+        packet.data = 0;
+        packet.size = 0;
     }
-    std::clog << "av_read_frame succeeded with a "<<(*packet)->size<<" byte frame\n";
+    std::clog << "av_read_frame succeeded with a "<<packet.size<<" byte frame\n";
 
     // Make sure libav doesn't free the packet before we've finished with
     // it.
-    av_dup_packet(*packet);
+    av_dup_packet(&packet);
 }
 

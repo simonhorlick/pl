@@ -14,7 +14,7 @@ public:
     ~LibavDemuxer();
     bool Initialise(ElementaryStream* stream);
 
-    void ReadFrame(AVPacket** packet);
+    void ReadFrame(AVPacket& packet);
 
 private:
     ElementaryStream* stream_;

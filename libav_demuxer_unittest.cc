@@ -35,6 +35,11 @@ TEST_F(LibavDemuxerTest, Decode) {
     LibavDemuxer d;
     d.Initialise(CreateVideoStream("test/stream.264"));
 
+    AVPacket p;
+    d.ReadFrame(p);
+
+    std::clog << "Frame of size " << p.size << "\n";
+
     FAIL();
 }
 
