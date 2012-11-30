@@ -20,6 +20,15 @@ libav_demuxer_unittest: libav_demuxer_unittest.o libav_stream.o file_source.o li
 file_source.o: file_source.cc file_source.h data_source.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+multicast_source.o: multicast_source.cc multicast_source.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+multicast_source_unittest.o: multicast_source_unittest.cc multicast_source.h
+	$(CXX) $(CXXFLAGS) -I$(GTEST_DIR)/include -c $< -o $@
+
+multicast_source_unittest: multicast_source_unittest.o multicast_source.o gtest_main.a
+	$(CXX) $(CXXFLAGS) $^ -lpthread -o $@
+
 libav_stream.o: libav_stream.cc libav_stream.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
