@@ -9,11 +9,9 @@ namespace {
     }
 }
 
-extern AVInputFormat ff_h264_demuxer;
-
 LibavDemuxer::LibavDemuxer()
     : stream_(0), io_context_(0) {
-    av_register_input_format(&ff_h264_demuxer);
+    av_register_all();
     format_context_ = avformat_alloc_context();
 }
 
