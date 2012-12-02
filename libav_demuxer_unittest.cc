@@ -32,8 +32,11 @@ public:
 };
 
 TEST_F(LibavDemuxerTest, Decode) {
+    ElementaryStream* s = CreateVideoStream("test/stream.264");
+    ASSERT_TRUE(NULL != s);
+
     LibavDemuxer d;
-    d.Initialise(CreateVideoStream("test/stream.264"));
+    d.Initialise(s);
 
     AVPacket p;
     d.ReadFrame(p);
