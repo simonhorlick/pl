@@ -69,20 +69,11 @@ TEST_F(ReclockTest, DoubleNumberOfSourceFrames) {
     frames[2] = MakeSinglePixelFrame(A);
     frames[3] = MakeSinglePixelFrame(B);
 
-    std::list<AVFrameSharedPtr> sourceFrames;
-    sourceFrames.push_back(frames[0]);
-    sourceFrames.push_back(frames[1]);
-    sourceFrames.push_back(frames[2]);
-    sourceFrames.push_back(frames[3]);
+    for(int i=0; i<4; i++) r.Add(frames[i]);
 
     std::list<AVFrameSharedPtr> expectedTargetFrames;
     expectedTargetFrames.push_back(frames[0]);
     expectedTargetFrames.push_back(frames[2]);
-
-    for(std::list<AVFrameSharedPtr>::iterator it = sourceFrames.begin();
-            it != sourceFrames.end(); ++it) {
-        r.Add(*it);
-    }
 
     EXPECT_EQ(expectedTargetFrames, targetFrames);
 }
