@@ -8,6 +8,15 @@ all:
 clean:
 	rm -f *.o *.a libav_demuxer_unittest
 
+reclock.o: reclock.cc reclock.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+reclock_unittest.o: reclock_unittest.cc reclock.h
+	$(CXX) $(CXXFLAGS) -I$(GTEST_DIR)/include -c $< -o $@
+
+reclock_unittest: reclock_unittest.o reclock.o gtest_main.a
+	$(CXX) $(CXXFLAGS) $^ -lavcodec -lavformat -lavutil -lpthread -o $@
+
 bob.o: bob.cc bob.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
