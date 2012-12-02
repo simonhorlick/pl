@@ -32,28 +32,6 @@ void lerp(AVFrame* dest, AVFrame* a, AVFrame* b, int num, int den) {
 }
 
 void reclock(std::list<AVFrame*>& source, std::list<AVFrame*>& target, int sourcebase, int targetbase) {
-    int nn = 0;
-    AVFrame* p = source[0];
-    AVFrame* n = source[nn];
-    // FIXME: Use libav functions for this, just need to allocate a frame
-    AVFrame* interp = make_frame(p->width, p->height);
-    int origframes = source.size();
-    int newframes = (origframes*targetbase)/sourcebase;
-
-    // FIXME: This is really shit. Want to just take two frames from source, output
-    // a frame then possibly remove frames from source.
-    for(int i=0; i<newframes; i++) {
-        int dts = (i*1000)/targetbase;
-        if(n->pts < dts) {
-            n = source[++nn];
-            p = source[nn-1];
-        }
-        assert(n->pts >= dts);
-        assert(p->pts <= dts);
-        int num = dts - p->pts;
-        int den = n->pts - p->pts; //(timebase)
-        lerp(interp, p, n, num, den);
-        target.push_back(interp);
-    }
+    // TODO: Implement
 }
 
