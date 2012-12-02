@@ -31,7 +31,9 @@ void lerp(AVFrame* dest, AVFrame* a, AVFrame* b, int num, int den) {
     }
 }
 
-void reclock(std::list<AVFrame*>& source, std::list<AVFrame*>& target, int sourcebase, int targetbase) {
-    // TODO: Implement
+void Reclock::Update() {
+    AVFrameSharedPtr p(source.front());
+    source.erase(source.begin());
+    cb_(p);
 }
 

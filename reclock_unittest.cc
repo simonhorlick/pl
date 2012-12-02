@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <list>
+#include <boost/bind.hpp>
 #include "reclock.h"
 #include "frame.h"
 
@@ -8,21 +9,46 @@ extern "C" {
 }
 
 class ReclockTest : public testing::Test {
-    void PushSinglePixelFrame(uint8_t colour[3]) {
+public:
+    AVFrameSharedPtr MakeSinglePixelFrame(uint8_t colour[3]) {
         AVFrame* frame = new AVFrame;
         avpicture_alloc((AVPicture*)frame, PIX_FMT_YUV420P, 1, 1);
         for(int i=0; i<3; i++)
             frame->data[i][0] = colour[i];
-        frames.push_back(AVFrameSharedPtr(frame, AVFrameDeleter()));
+        return AVFrameSharedPtr(frame, AVFrameDeleter());
+    }
+
+    void OnFrame(const AVFrameSharedPtr& frame) {
+        std::clog << "Got frame" << std::endl;
+        targetFrames.push_back(frame);
     }
 
 protected:
-    std::list<AVFrameSharedPtr> frames;
+    std::list<AVFrameSharedPtr> targetFrames;
 };
 
 // Ensure frames are untouched
 TEST_F(ReclockTest, OneToOne) {
-    FAIL() << "Not implemented";
+    uint8_t A[3] = {0xff, 0xff, 0xff};
+    uint8_t B[3] = {0x0, 0x0, 0x0};
+
+    FrameCallback cb(boost::bind(&ReclockTest::OnFrame, this, _1));
+
+    Reclock r;
+    r.Initialise(cb, 25, 25);
+
+    std::list<AVFrameSharedPtr> sourceFrames;
+    sourceFrames.push_back(MakeSinglePixelFrame(A));
+    sourceFrames.push_back(MakeSinglePixelFrame(B));
+    sourceFrames.push_back(MakeSinglePixelFrame(A));
+    sourceFrames.push_back(MakeSinglePixelFrame(B));
+
+    for(std::list<AVFrameSharedPtr>::iterator it = sourceFrames.begin();
+            it != sourceFrames.end(); ++it) {
+        r.Add(*it);
+    }
+
+    EXPECT_EQ(targetFrames, sourceFrames);
 }
 
 // If there are twice as many source frames as there are target frames, then

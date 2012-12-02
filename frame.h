@@ -2,6 +2,7 @@
 #define FRAME_H
 
 #include <cassert>
+#include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 
 extern "C" {
@@ -19,6 +20,7 @@ struct AVFrameDeleter {
 };
 
 typedef boost::shared_ptr<AVFrame> AVFrameSharedPtr;
+typedef boost::function<void(AVFrameSharedPtr)> FrameCallback;
 
 #endif // FRAME_H
 
