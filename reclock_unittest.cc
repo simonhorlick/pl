@@ -55,7 +55,36 @@ TEST_F(ReclockTest, OneToOne) {
 // ensure no frames are blended, as there is one source frame at the time of
 // each target frame.
 TEST_F(ReclockTest, DoubleNumberOfSourceFrames) {
-    FAIL() << "Not implemented";
+    uint8_t A[3] = {0xff, 0xff, 0xff};
+    uint8_t B[3] = {0x0, 0x0, 0x0};
+
+    FrameCallback cb(boost::bind(&ReclockTest::OnFrame, this, _1));
+
+    Reclock r;
+    r.Initialise(cb, 50, 25);
+
+    AVFrameSharedPtr frames[4];
+    frames[0] = MakeSinglePixelFrame(A);
+    frames[1] = MakeSinglePixelFrame(B);
+    frames[2] = MakeSinglePixelFrame(A);
+    frames[3] = MakeSinglePixelFrame(B);
+
+    std::list<AVFrameSharedPtr> sourceFrames;
+    sourceFrames.push_back(frames[0]);
+    sourceFrames.push_back(frames[1]);
+    sourceFrames.push_back(frames[2]);
+    sourceFrames.push_back(frames[3]);
+
+    std::list<AVFrameSharedPtr> expectedTargetFrames;
+    expectedTargetFrames.push_back(frames[0]);
+    expectedTargetFrames.push_back(frames[2]);
+
+    for(std::list<AVFrameSharedPtr>::iterator it = sourceFrames.begin();
+            it != sourceFrames.end(); ++it) {
+        r.Add(*it);
+    }
+
+    EXPECT_EQ(expectedTargetFrames, targetFrames);
 }
 
 // Pick the closest source frames to the target frame time and interpolate
