@@ -5,7 +5,7 @@
 
 class LinuxDVBSource : public DataSource {
 public:
-    LinuxDVBSource(int device);
+    LinuxDVBSource(int adapter, int device);
 
     bool Tune(int frequencykHz);
 
@@ -13,6 +13,9 @@ public:
 
 private:
     int device_;
+    int frontend_handle;
+    int demux_handle;
+    int dvr_handle;
 };
 
 #endif // LINUX_DVB_SOURCE_H

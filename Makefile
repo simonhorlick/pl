@@ -8,6 +8,15 @@ all:
 clean:
 	rm -f *.o *.a libav_demuxer_unittest
 
+tv_daemon.o: tv_daemon.cc linux_dvb_source.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+linux_dvb_source.o: linux_dvb_source.cc linux_dvb_source.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+tv_daemon: tv_daemon.o linux_dvb_source.o
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
 libav_demuxer.o: libav_demuxer.cc libav_demuxer.h data_source.h libav_stream.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
