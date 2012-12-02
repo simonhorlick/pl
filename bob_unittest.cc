@@ -1,12 +1,14 @@
 #include <gtest/gtest.h>
 #include <list>
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 #include "bob.h"
 
 #include "elementary_stream.h"
 #include "libav_video_decoder.h"
 #include "libav_demuxer.h"
 #include "file_renderer.h"
+#include "frame.h"
 
 extern "C" {
     #include <libavcodec/avcodec.h>
@@ -57,28 +59,29 @@ public:
             << "  pts " << f->pts << "\n"
             << "  packet pts " << f->pkt_pts << "\n"
             << "  packet dts " << f->pkt_dts << "\n";
+
         // Take a copy of the frame
-        AVFrame* picture = new AVFrame;
-        // TODO: Need to copy rest of the AVFrame structure?
-        //avpicture_alloc(picture, f->format, f->width, f->height);
-        av_picture_copy((AVPicture*)picture, (AVPicture*)f, (PixelFormat)f->format, f->width, f->height);
-        frames.push_back(picture);
+        AVFrame* copy = new AVFrame;
+        memcpy(copy, f, sizeof(AVFrame));
+        avpicture_alloc((AVPicture*)copy, (PixelFormat)f->format, f->width, f->height);
+        av_picture_copy((AVPicture*)copy, (AVPicture*)f, (PixelFormat)f->format, f->width, f->height);
+        frames.push_back(AVFrameSharedPtr(copy, AVFrameDeleter()));
     }
 
 protected:
-    std::list<AVFrame*> frames;
+    std::list<AVFrameSharedPtr> frames;
 };
 
 TEST_F(BobTest, Test) {
-    ReadAndDecodeFile("test/stream2.264");
+    ReadAndDecodeFile("test/stream.264");
 
     FileRenderer renderer;
     renderer.Initialise("output.yuv");
 
-    for(std::list<AVFrame*>::iterator it = frames.begin(); it != frames.end(); ++it) {
-        std::list<AVFrame*> bobbed;
+    for(std::list<AVFrameSharedPtr>::iterator it = frames.begin(); it != frames.end(); ++it) {
+        std::list<AVFrameSharedPtr> bobbed;
         bob(*it, bobbed);
-        for(std::list<AVFrame*>::iterator jt = bobbed.begin(); jt != bobbed.end(); ++jt) {
+        for(std::list<AVFrameSharedPtr>::iterator jt = bobbed.begin(); jt != bobbed.end(); ++jt) {
             renderer.Draw(*jt);
         }
     }

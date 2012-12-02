@@ -5,8 +5,7 @@
 #include <fstream>
 
 #include "libav_video_decoder.h"
-
-struct AVFrame;
+#include "frame.h"
 
 class FileRenderer {
 public:
@@ -15,7 +14,7 @@ public:
 
     void Initialise(std::string file);
 
-    void Draw(AVFrame* picture);
+    void Draw(const AVFrameSharedPtr& picture);
 
 private:
     std::ofstream f;
