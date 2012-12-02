@@ -21,7 +21,6 @@ public:
         char buf[readbufsize];
         std::ifstream f(file, std::ios::binary);
         if(!f.is_open()) {
-            std::cerr << "Error opening " << file << "\n";
             return 0;
         }
         // Read the whole file into memory
@@ -34,8 +33,11 @@ public:
     }
 
     void ReadAndDecodeFile(const char* filename) {
+        ElementaryStream* stream = CreateVideoStream(filename);
+        ASSERT_TRUE(NULL != stream) << "Error opening " << filename << "\n";
+
         LibavDemuxer demuxer;
-        demuxer.Initialise(CreateVideoStream(filename));
+        demuxer.Initialise(stream);
 
         LibavVideoDecoder decoder;
         decoder.Initialise(&demuxer);
