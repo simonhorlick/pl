@@ -8,6 +8,15 @@ all:
 clean:
 	rm -f *.o *.a libav_demuxer_unittest
 
+bob.o: bob.cc bob.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+bob_unittest.o: bob_unittest.cc bob.h
+	$(CXX) $(CXXFLAGS) -I$(GTEST_DIR)/include -c $< -o $@
+
+bob_unittest: bob_unittest.o bob.o file_renderer.o libav_demuxer.o libav_video_decoder.o gtest_main.a
+	$(CXX) $(CXXFLAGS) $^ -lz -lavcodec -lavformat -lavutil -lpthread -o $@
+
 libav_demuxer.o: libav_demuxer.cc libav_demuxer.h elementary_stream.h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
