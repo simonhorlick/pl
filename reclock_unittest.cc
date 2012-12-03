@@ -35,7 +35,7 @@ TEST_F(ReclockTest, OneToOne) {
     FrameCallback cb(boost::bind(&ReclockTest::OnFrame, this, _1));
 
     Reclock r;
-    r.Initialise(cb, 25, 25);
+    r.Initialise(cb, 1000, 25, 25);
 
     std::list<AVFrameSharedPtr> sourceFrames;
     sourceFrames.push_back(MakeSinglePixelFrame(A));
@@ -61,7 +61,7 @@ TEST_F(ReclockTest, DoubleNumberOfSourceFrames) {
     FrameCallback cb(boost::bind(&ReclockTest::OnFrame, this, _1));
 
     Reclock r;
-    r.Initialise(cb, 50, 25);
+    r.Initialise(cb, 1000, 50, 25);
 
     AVFrameSharedPtr frames[4];
     frames[0] = MakeSinglePixelFrame(A);
