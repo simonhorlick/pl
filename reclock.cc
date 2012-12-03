@@ -32,6 +32,16 @@ void lerp(AVFrame* dest, AVFrame* a, AVFrame* b, int num, int den) {
 }
 
 void Reclock::Update() {
+    // Possible cases:
+    //  - Display timestamp is the same as one in our list
+    //    => Display this frame and remove all frames in source with lower timestamps
+    //  - Display timestamp lies between two source frames
+    //    => Return an interpolated frame
+    //  - Display timestamp is greater than any in our list
+    //    => Wait for more source frames.
+    //  - Display timestamp is before any in our list
+    //    => Display the first source frame.
+
     AVFrameSharedPtr p(source.front());
     source.erase(source.begin());
     cb_(p);
